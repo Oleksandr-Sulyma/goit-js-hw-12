@@ -24,7 +24,9 @@ a {
 }
 
 button {
+  all: unset;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 img {

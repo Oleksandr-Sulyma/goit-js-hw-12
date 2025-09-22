@@ -8,15 +8,48 @@
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <load src="./partials/header.html" icon-path="img/sprite.svg#logo" />
-
     <main>
-      <!-- Loads the specified .html file -->
-      <load src="./partials/vite-promo.html" />
-      <load src="./partials/badges.html" />
+      <form class="form">
+        <label class="search-label">
+          <input
+            class="search-input"
+            type="search"
+            name="search"
+            autocomplete="on"
+            placeholder="Search images..."
+            required
+          />Search term(not exceed 100 characters.)
+        </label>
+        <label class="search-label">
+          <select class="search-input filter" name="typeImg">
+            <option value="all">all</option>
+            <option value="photo">photo</option>
+            <option value="illustration">illustration</option>
+            <option value="vector">vector</option></select
+          >Image type
+        </label>
+        <label class="search-label">
+          <select class="search-input filter" name="orientation">
+            <option value="all">all</option>
+            <option value="horizontal">horizontal</option>
+            <option value="vertical">vertical</option></select
+          >Orientation
+        </label>
+        <button class="btn-submit" type="submit">Search</button>
+      </form>
+      <!-- <div class="loader-overlay">
+        <span class="loader">Loading images, please wait...</span>
+      </div> -->
+      <div class="wrapper-gallery">
+        <ul class="gallery"></ul>
+      </div>
+      <div class="load">
+        <button class="btn-load" type="button">Load more</button>
+        <!-- <div class="loader-overlay">
+        <span class="loader">Loading images, please wait...</span>
+      </div> -->
+      </div>
     </main>
-
-    <load src="./partials/footer.html" />
 
     <script type="module" src="./main.js"></script>
   </body>

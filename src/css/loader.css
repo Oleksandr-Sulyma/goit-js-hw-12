@@ -1,0 +1,16 @@
+.loader-overlay {
+  display: none;
+  /* margin-top: 0px; */
+  padding: 8px 8px;
+  background-color: rgb(255, 252, 252);
+  color: #2e2f42;
+  font-size: 16px;
+  /* border: 1px solid #ccc; */
+  border-radius: 4px;
+  min-width: 100vw;
+}
+
+.loader-overlay.active {
+  display: flex;
+  justify-content: center;
+}
