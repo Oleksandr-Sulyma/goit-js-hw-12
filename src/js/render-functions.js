@@ -4,10 +4,12 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import errorIcon from '../img/bi_x-octagon.svg';
 
+export const form = document.querySelector('.form');
 export const galleryEl = document.querySelector('.gallery');
+export const loadBtn = document.querySelector('.btn-load');
+
 const span = document.querySelector('.loader');
 const loaderOverlay = document.querySelector('.loader-overlay');
-export const loadBtn = document.querySelector('.btn-load');
 
 // У файлі render-functions.js створи екземпляр SimpleLightbox
 // для роботи з модальним вікном та зберігай функції для відображення
@@ -77,45 +79,14 @@ export function clearGallery() {
 //  клас для відображення лоадера. Нічого не повертає.
 
 export function showLoader() {
-  const loaderOverlay = document.createElement('div');
-  loaderOverlay.classList.add('loader-overlay', 'active');
-  loaderOverlay.innerHTML = `
-    <span class="loader">Loading images, please wait...</span>
-  `;
-  galleryEl.appendChild(loaderOverlay);
-
-
-  // loaderOverlay.classList.add('active');
+  span.classList.add('active');
 }
 
 // hideLoader(). Ця функція нічого не приймає, повинна прибирати
 //  клас для відображення лоадера. Нічого не повертає.
 
 export function hideLoader() {
-  const loaderOverlay = document.querySelector('.loader-overlay');
-  let sum = 0;
-  const arr = galleryEl.querySelectorAll('img');
-
-  if (arr.length === 0) {
-    loaderOverlay.remove();
-    return;
-  }
-
-  function checkDone() {
-    sum += 1;
-    if (sum === arr.length) {
-      loaderOverlay.remove();
-    }
-  }
-
-  arr.forEach(el => {
-    if (el.complete && el.naturalWidth > 0) {
-      checkDone();
-    } else {
-      el.addEventListener('load', checkDone, { once: true });
-      el.addEventListener('error', checkDone, { once: true });
-    }
-  });
+  span.classList.remove('active');
 }
 
 // showLoadMoreButton(). Ця функція нічого не приймає, повинна додавати клас
@@ -129,6 +100,17 @@ export function showLoadMoreButton() {
 
 export function hideLoadMoreButton() {
   loadBtn.classList.remove('active');
+}
+
+// toggleLoadMoreButton(numberPage, maxPage). Ця функція приймає номер
+// поточної сторінки і загальну кількість сторінок і показує або ховає
+// кнопку Load more в залежності від того, чи є ще сторінки для завантаження.
+export function toggleLoadMoreButton(numberPage, maxPage) {
+  if (numberPage < maxPage) {
+    showLoadMoreButton();
+  } else {
+    hideLoadMoreButton();
+  }
 }
 
 // showError(message). Ця функція приймає повідомлення помилки і відображає його для користувача
@@ -145,12 +127,34 @@ export function showError(message) {
   });
 }
 
-export function showWarning(message) {
-  iziToast.info({
-    message: `${message}`,
-    position: 'topRight',
-    maxWidth: 482,
-    messageSize: '16',
-    messageColor: 'black',
-  });
+// showWarning(numberPage, maxPage). Ця функція приймає номер поточної сторінки і загальну кількість сторінок
+// і відображає відповідне повідомлення для користувача
+export function showWarning(numberPage, maxPage) {
+  if (maxPage === 0) {
+    showError(
+      'Sorry, there are no images matching your search query. Please, try again!'
+    );
+    return;
+  }
+  if (numberPage >= maxPage) {
+    iziToast.info({
+      message: "We're sorry, but you've reached the end of search results.",
+      position: 'topRight',
+      maxWidth: 482,
+      messageSize: '16',
+      messageColor: 'black',
+    }); 
+    return;
+  }
+  return;
 }
+
+// toggleElementsState(isDisabled). Ця функція булеве значення,
+// яке вказує, чи потрібно відключити (true) або включити (false) елементи форми.
+// export function toggleElementsState(isDisabled) {
+//   const elements = form.elements;
+//   for (let i = 0; i < elements.length; i++) {
+//     elements[i].disabled = isDisabled;
+//   }
+//   loadBtn.disabled = isDisabled;
+// }

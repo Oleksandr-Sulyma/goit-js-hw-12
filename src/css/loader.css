@@ -1,4 +1,4 @@
-.loader-overlay {
+.loader {
   display: none;
   /* margin-top: 0px; */
   padding: 8px 8px;
@@ -10,7 +10,7 @@
   min-width: 100vw;
 }
 
-.loader-overlay.active {
+.loader.active {
   display: flex;
   justify-content: center;
 }

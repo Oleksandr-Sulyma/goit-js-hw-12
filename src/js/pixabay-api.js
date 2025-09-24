@@ -3,7 +3,7 @@
 // (пошукове слово, яке є рядком) та page (номер сторінки, яка є числом),
 // здійснювати HTTP-запит і повертати значення властивості data з отриманої відповіді.
 
-import axios  from 'axios';
+import axios from 'axios';
 const requestPixabay = axios.create({
   baseURL: 'https://pixabay.com/api/',
   params: {
@@ -20,17 +20,17 @@ export default async function getImagesByQuery(
   orientation = 'horizontal'
 ) {
   try {
-     const res = await requestPixabay('', {
-    params: {
-      q: query,
-      page: page,
-      image_type: imageType,
-      orientation: orientation,
-    },
-  });
- return res.data;
-  } catch {
-    throw error;    
+    const res = await requestPixabay('', {
+      params: {
+        q: query,
+        page: page,
+        image_type: imageType,
+        orientation: orientation,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    throw error;
   }
- 
 }
+
