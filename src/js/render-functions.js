@@ -115,7 +115,7 @@ export function toggleLoadMoreButton(numberPage, maxPage) {
 
 // showError(message). Ця функція приймає повідомлення помилки і відображає його для користувача
 export function showError(message) {
-  iziToast.show({
+  return iziToast.show({
     message: `${message}`,
     backgroundColor: '#ef4040',
     position: 'topRight',
@@ -127,27 +127,17 @@ export function showError(message) {
   });
 }
 
-// showWarning(numberPage, maxPage). Ця функція приймає номер поточної сторінки і загальну кількість сторінок
-// і відображає відповідне повідомлення для користувача
-export function showWarning(numberPage, maxPage) {
-  if (maxPage === 0) {
-    showError(
-      'Sorry, there are no images matching your search query. Please, try again!'
-    );
-    return;
-  }
-  if (numberPage >= maxPage) {
-    iziToast.info({
+// showWarning(numberPage, maxPage). Ця функція нічого не приймає відображає повідомлення про 
+// завантаження усіх сторінок 
+export function showWarning() {
+     iziToast.info({
       message: "We're sorry, but you've reached the end of search results.",
       position: 'topRight',
       maxWidth: 482,
       messageSize: '16',
       messageColor: 'black',
     }); 
-    return;
   }
-  return;
-}
 
 // toggleElementsState(isDisabled). Ця функція булеве значення,
 // яке вказує, чи потрібно відключити (true) або включити (false) елементи форми.
