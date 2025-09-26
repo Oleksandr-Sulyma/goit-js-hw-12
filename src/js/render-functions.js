@@ -9,11 +9,7 @@ export const galleryEl = document.querySelector('.gallery');
 export const loadBtn = document.querySelector('.btn-load');
 
 const span = document.querySelector('.loader');
-const loaderOverlay = document.querySelector('.loader-overlay');
 
-// У файлі render-functions.js створи екземпляр SimpleLightbox
-// для роботи з модальним вікном та зберігай функції для відображення
-// елементів інтерфейсу:
 const lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
@@ -65,6 +61,20 @@ export function createGallery(images) {
   galleryEl.insertAdjacentHTML('beforeend', markup);
 
   lightbox.refresh();
+}
+
+//scrollGalleryOnLoad(page) - Ця функція приймає нічого не приймає, виконує плавне прокручування сторінки вниз
+//  на висоту двох карток галереї після завантаження нової порції зображень.
+//  Нічого не повертає.
+export function scrollGalleryOnLoad() {
+  const firstLi = galleryEl.querySelector('li');
+  if (firstLi) {
+    const domRect = firstLi.getBoundingClientRect();
+    window.scrollBy({
+      top: domRect.height * 2,
+      behavior: 'smooth',
+    });
+  }
 }
 
 // clearGallery(). Ця функція нічого не приймає та повинна
@@ -127,24 +137,14 @@ export function showError(message) {
   });
 }
 
-// showWarning(numberPage, maxPage). Ця функція нічого не приймає відображає повідомлення про 
-// завантаження усіх сторінок 
+// showWarning(numberPage, maxPage). Ця функція нічого не приймає відображає повідомлення про
+// завантаження усіх сторінок
 export function showWarning() {
-     iziToast.info({
-      message: "We're sorry, but you've reached the end of search results.",
-      position: 'topRight',
-      maxWidth: 482,
-      messageSize: '16',
-      messageColor: 'black',
-    }); 
-  }
-
-// toggleElementsState(isDisabled). Ця функція булеве значення,
-// яке вказує, чи потрібно відключити (true) або включити (false) елементи форми.
-// export function toggleElementsState(isDisabled) {
-//   const elements = form.elements;
-//   for (let i = 0; i < elements.length; i++) {
-//     elements[i].disabled = isDisabled;
-//   }
-//   loadBtn.disabled = isDisabled;
-// }
+  iziToast.info({
+    message: "We're sorry, but you've reached the end of search results.",
+    position: 'topRight',
+    maxWidth: 482,
+    messageSize: '16',
+    messageColor: 'black',
+  });
+}

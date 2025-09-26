@@ -1,4 +1,8 @@
-import getImagesByQuery from './js/pixabay-api.js';
+import {
+  getImagesByQuery,
+PER_PAGE,
+} from './js/pixabay-api.js';
+
 import {
   createGallery,
   clearGallery,
@@ -7,25 +11,20 @@ import {
   showError,
   loadBtn,
   showWarning,
-  galleryEl,
+  scrollGalleryOnLoad,
   form,
   toggleLoadMoreButton,
 } from './js/render-functions.js';
 
 import './css/styles.css';
 
-const input = document.querySelector('.search-input');
-const btn = document.querySelector('.btn-submit');
-
-let elements;
 let search;
 let maxPage;
 let numberPage;
 let imageType;
 let orientation;
 
-
-async function fetchImagesData(search, numberPage, imageType, orientation) {
+async function getImages(search, numberPage, imageType, orientation) {
   const response = await getImagesByQuery(
     search,
     numberPage,
@@ -35,66 +34,54 @@ async function fetchImagesData(search, numberPage, imageType, orientation) {
   return response;
 }
 
-async function handleImageLoading(search, numberPage, imageType, orientation) {
+async function renderImagesPage(search, numberPage, imageType, orientation) {
   loadBtn.disabled = true;
 
   try {
     showLoader();
-    const response = await fetchImagesData(
+    const response = await getImages(
       search,
       numberPage,
       imageType,
       orientation
     );
-    // console.log(response);
-    maxPage = Math.ceil(response.totalHits / 15);
+   
+    maxPage = Math.ceil(response.totalHits / PER_PAGE);
     if (maxPage === 0) {
       showError(
         'Sorry, there are no images matching your search query. Please, try again!'
       );
       return;
     }
-    // console.log('Max page - ', maxPage);
-    // if (maxPage > 0) {
-    //    console.log('Number page - ', numberPage);
-    // }
+    
     createGallery(response.hits);
-
     if (numberPage > 1) {
-      const firstLi = galleryEl.querySelector('li');
-      if (firstLi) {
-        const domRect = firstLi.getBoundingClientRect();
-        window.scrollBy({
-        top: domRect.height * 2,
-        behavior: 'smooth',
-      });
-      }      
-      
+      scrollGalleryOnLoad();
     }
+
+    if (numberPage === maxPage) {
+      showWarning();
+    }
+    
+    toggleLoadMoreButton(numberPage, maxPage);
   } catch (error) {
     showError(`Error: ${error.message}`);
-    console.log(error.message);
     return;
   } finally {
     hideLoader();
     loadBtn.disabled = false;
-    if (numberPage === maxPage) {
-      showWarning();
-    }
-    // console.log(numberPage, maxPage);
-    toggleLoadMoreButton(numberPage, maxPage);
   }
 }
 
-form.addEventListener('submit', fetchImages);
+form.addEventListener('submit', handleSearchSubmit);
 
-async function fetchImages(event) {
+async function handleSearchSubmit(event) {
   event.preventDefault();
 
   clearGallery();
 
   numberPage = 1;
-  elements = event.target.elements;
+  const elements = event.target.elements;
   search = elements.search.value.trim().replace(/\s+/g, '+');
   imageType = elements.typeImg.value;
   orientation = elements.orientation.value;
@@ -103,13 +90,13 @@ async function fetchImages(event) {
     return showError('Sorry, search query is empty!');
   }
 
-  await handleImageLoading(search, numberPage, imageType, orientation);
+  await renderImagesPage(search, numberPage, imageType, orientation);
   elements.search.value = '';
 }
 
-loadBtn.addEventListener('click', loaderImages);
+loadBtn.addEventListener('click', handleLoadMoreClick);
 
-async function loaderImages(event) {
+async function handleLoadMoreClick(event) {
   numberPage += 1;
-  await handleImageLoading(search, numberPage, imageType, orientation);
+  await renderImagesPage(search, numberPage, imageType, orientation);
 }
